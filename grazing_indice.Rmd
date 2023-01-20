@@ -1,0 +1,23 @@
+---
+title: "Untitled"
+author: "Shane Dewees"
+date: "2023-01-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(sf)
+library(raster)
+library(here)
+```
+
+Reading in grazing data
+
+```{r}
+grazing_data <- st_read(here("data", "ExistingGrazingAreas_2.shp"))
+
+
+```
+
