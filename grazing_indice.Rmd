@@ -13,12 +13,40 @@ library(raster)
 library(here)
 ```
 
-Reading in grazing data
+Read in in the grazing and parcel data:
+ - create a name to store each data file as in the local environment (i.e. grazing_data)
+ - remember that <- tells R to store to a name
+ - use the st_read and here functions.
+ - inside here, put each folder and then the shapefile inside quotes. 
+ 
+ -inside mutate create a column called grazed_status and then have each row be equal to grazed or ungrazed. 
+ - Then use the select function to only keep the grazed_status and geometry columns
 
 ```{r}
-grazing_data <- st_read(here("data", "ExistingGrazingAreas_2.shp"))
+_____ <- st_read(here()) %>% #read in grazed data here remember the "%>%" tells R to run the next line of code applied to the line you just wrote. 
+  mutate() %>% 
+  dplyr::select() %>% 
+  st_as_sf() #sometimes data manupilation confuses R as to if this is spatial data, so this function just reminds R we are still working with spatial data. 
 
+______ <-  # Repeat above for parcel data
+  %>% 
+  st_zm() #end this chunk of code with this function to get rid of z data. 
 
+parcel_no_Grazing <- st_difference() %>% #use st_difference function to get the parcel data that is not overlapped by the grazed data
+   %>% #select grazed_status and geometry
+   %>% #reset the grazed status to ungrazed (Hint: use mutate function)
+  st_sf()
+
+grazing_overlap <- st_intersection() %>% #now get the overlap between the two data frames
+   %>%  # select grazed-status and geometry
+   %>%  # reset the grazed status to grazed
+  st_sf()
+
+ # repeat above but to get the grazing data that is not overlapped by parcel data. 
+  
+all_data <- rbind() #combine the three data frames you just made
+
+plot(all_data) #Check it out!
 ```
 
-test edit
+
