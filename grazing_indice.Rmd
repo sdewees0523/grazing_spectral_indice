@@ -23,7 +23,7 @@ Read in in the grazing and parcel data:
  - Then use the select function to only keep the grazed_status and geometry columns
 
 ```{r}
-_____ <- st_read(here()) %>% #read in grazed data here remember the "%>%" tells R to run the next line of code applied to the line you just wrote. 
+______ <- st_read(here()) %>% #read in grazed data here remember the "%>%" tells R to run the next line of code applied to the line you just wrote. 
   mutate() %>% 
   dplyr::select() %>% 
   st_as_sf() #sometimes data manupilation confuses R as to if this is spatial data, so this function just reminds R we are still working with spatial data. 
@@ -50,3 +50,37 @@ plot(all_data) #Check it out!
 ```
 
 
+
+```{r}
+grazing_data <- st_read(here("data", "sb_parcel_data", "grazing_parcel_subset.shp")) %>% 
+mutate(grazed_status = "grazed")%>%
+dplyr::select("grazed_status","geometry")%>% 
+st_as_sf()
+
+ 
+
+parcel_data <- st_read(here("data", "sb_parcel_data", "parcel_map_subset.shp"))%>%
+mutate(grazed_status= "ungrazed")%>%
+dplyr::select("grazed_status","geometry")%>% 
+st_as_sf()%>% 
+st_zm()
+ 
+parcel_no_Grazing <- st_difference(parcel_data, grazing_data)%>%
+dplyr::select("grazed_status","geometry")%>%
+mutate(grazed_status="ungrazed")%>%
+st_as_sf()
+
+grazing_overlap <- st_intersection(parcel_data, grazing_data)%>%
+dplyr::select("grazed_status","geometry")%>%
+mutate(grazed_status="grazed")%>%
+st_as_sf()
+
+grazing_no_parcel <- st_difference(grazing_data, parcel_data)%>%
+dplyr::select("grazed_status","geometry")%>%
+mutate(grazed_status="grazed")%>%
+st_as_sf()
+
+all_data <- rbind(parcel_no_Grazing, grazing_no_parcel, grazing_overlap)
+plot(all_data)
+
+```
