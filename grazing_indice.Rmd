@@ -84,3 +84,10 @@ all_data <- rbind(parcel_no_Grazing, grazing_no_parcel, grazing_overlap)
 plot(all_data)
 
 ```
+
+```{r}
+landsat_list <- list.files(path = here("data", "LC08_L2SP_042036_20221105_20221115_02_T1"), pattern = '.TIF$', all.files = TRUE)
+
+landsat <- raster::stack(here("data", "LC08_L2SP_042036_20221105_20221115_02_T1", landsat_list))
+```
+
